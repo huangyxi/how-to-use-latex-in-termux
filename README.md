@@ -35,6 +35,8 @@ cd test\
 
 echo "\document{article}" > test.tex
 echo "\begin{document}" >> test.tex
+#"font=windows"!!!
+echo "\usepackage[fontset=windows]{ctex}" >> test.tex
 echo "测试" >> test.tex
 echo "\end{document}" >> test.tex
 

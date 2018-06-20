@@ -33,6 +33,23 @@ mkdir test\
 
 cd test\
 
+echo "\document{article}" > test.tex
+echo "\begin{document}" >> test.tex
+echo "测试" >> test.tex
+echo "\end{document}" >> test.tex
 
+xelatex test.tex
+
+#install lost package if needed
+tlmgr install --with-doc --with-src LOST_PACKAGE
+
+xelatex test.tex
+tlmgr install --with-doc --with-src LOST_PACKAGE
+xelatex test.tex
+tlmgr install --with-doc --with-src LOST_PACKAGE
+#...
+
+#open output pdf file at your own pdf reader
+termux-open test.pdf
 
 ```

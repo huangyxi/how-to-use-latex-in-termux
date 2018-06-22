@@ -22,6 +22,8 @@ cp [YOUR_WIN_FONTS_PATH/*] /data/data/com.termux/files/usr/share/fonts/WinFonts
 cd /data/data/com.termux/files/usr/share/fonts/WinFonts
 
 #add Windows fonts to termux
+chmod 744 *
+mkfontscale
 fc-cache -f -v
 
 cd

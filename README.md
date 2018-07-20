@@ -26,6 +26,9 @@ chmod 744 *
 mkfontscale
 fc-cache -f -v
 
+#add fonts Fandol
+tlmgr install fandol
+
 cd
 
 tlmgr install --reinstall --with-doc --with-src l3packages

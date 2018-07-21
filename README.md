@@ -23,8 +23,11 @@ cd /data/data/com.termux/files/usr/share/fonts/WinFonts
 
 #add Windows fonts to termux
 chmod 744 *
-mkfontscale
+#mkfontscale  #unable to execute
 fc-cache -f -v
+
+#better export in .bashrc
+export OSFONTDIR="/data/data/com.termux/files/usr/share/fonts"
 
 #add fonts Fandol
 tlmgr install fandol
@@ -45,14 +48,14 @@ echo "\usepackage[fontset=windows]{ctex}" >> test.tex
 echo "测试" >> test.tex
 echo "\end{document}" >> test.tex
 
-xelatex test.tex
+xelatex -synctex=1 -interaction=nonstopmode "test".tex
 
 #install lost package if needed
 tlmgr install --with-doc --with-src LOST_PACKAGE
 
-xelatex test.tex
+xelatex -synctex=1 -interaction=nonstopmode "test".tex
 tlmgr install --with-doc --with-src LOST_PACKAGE
-xelatex test.tex
+xelatex -synctex=1 -interaction=nonstopmode "test".tex
 tlmgr install --with-doc --with-src LOST_PACKAGE
 #...
 

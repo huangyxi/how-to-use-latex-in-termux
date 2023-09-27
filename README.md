@@ -1,65 +1,82 @@
-# How to use LaTeX in Termux (Android's Linux Terminal)
+# How to use LaTeX in Termux with custom fonts
 
-```shell_session
-#install texlive
+1. Install TeX Live and dependences
+```bash
+# install texlive
 apt install texlive
 
-#change remote repository to TUNA
-tlmgr option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet
-
-#update tlmgr
-tlmgr update --all
-
-#install fontconfig-utils to use fc-list
+# install fontconfig-utils which includes `fc-list`
 apt install fontconfig-utils
 
-#make new directory to store fonts from Windows
-mkdir -p /data/data/com.termux/files/usr/share/fonts/WinFonts
+# change the remote repository to the mirror close to you 
+tlmgr option repository https://mirrors.tuna.tsinghua.edu.cn/CTAN/systems/texlive/tlnet
 
-#copy fonts from Windows to termux directory
-cp [YOUR_WIN_FONTS_PATH/*] /data/data/com.termux/files/usr/share/fonts/WinFonts
+# update tlmgr
+tlmgr update --all
+```
 
-cd /data/data/com.termux/files/usr/share/fonts/WinFonts
+2. Install custom fonts
+```bash
+# make a new directory to store your custom fonts
+CUSTOM_FONT_PATH="/data/data/com.termux/files/usr/share/fonts/YOUR_DIR_NAME"
+mkdir -p "${CUSTOM_FONT_PATH}"
 
-#add Windows fonts to termux
-chmod 744 *
-#mkfontscale  #unable to execute
+# copy fonts from somewhere else to the path of your custom fonts
+cp [YOUR_FONTS_PATH/*] "${CUSTOM_FONT_PATH}"
+chmod 744 "${CUSTOM_FONT_PATH}"/*
 fc-cache -f -v
 
-#better export in .bashrc
+# better to export the path in ~/.bashrc
 export OSFONTDIR="/data/data/com.termux/files/usr/share/fonts"
 
-#add fonts Fandol
+# add the font Fandol
 tlmgr install fandol
+```
 
-cd
-
+3. Install LaTeX packages
+```bash
+# reinstall  l3packages
 tlmgr install --reinstall --with-doc --with-src l3packages
+
+# install ctex to parse Chinese if you need
 tlmgr install --with-doc --with-src ctex
+```
 
-mkdir test\
+4. Write a LaTeX demo in file `demo.tex`
+```bash
+# goto a temporary directory
+cd $(mktemp -d); pwd
 
-cd test\
+DEMO_FILE=$demo.tex$
+echo "\document{article}" > "${DEMO_FILE}"
 
-echo "\document{article}" > test.tex
-echo "\begin{document}" >> test.tex
-#"font=windows"!!!
-echo "\usepackage[fontset=windows]{ctex}" >> test.tex
-echo "测试" >> test.tex
-echo "\end{document}" >> test.tex
+# "font=windows" if you copied Chinese fonts from Windows
+echo "\usepackage[fontset=windows]{ctex}" >> "${DEMO_FILE}"
 
-xelatex -synctex=1 -interaction=nonstopmode "test".tex
+echo "\begin{document}" >> "${DEMO_FILE}"
 
-#install lost package if needed
+echo 'Hello $\LaTeX$' >> "${DEMO_FILE}"
+echo "测试" >> "${DEMO_FILE}" # or in other languages 
+
+echo "\end{document}" >> "${DEMO_FILE}"
+```
+
+5. compile the LaTeX file `demo.tex`
+```bash
+xelatex -synctex=1 -interaction=nonstopmode demo.tex
+
+# install lost packages if needed
 tlmgr install --with-doc --with-src LOST_PACKAGE
 
-xelatex -synctex=1 -interaction=nonstopmode "test".tex
+xelatex -synctex=1 -interaction=nonstopmode demo.tex
 tlmgr install --with-doc --with-src LOST_PACKAGE
-xelatex -synctex=1 -interaction=nonstopmode "test".tex
+
+xelatex -synctex=1 -interaction=nonstopmode demo.tex
 tlmgr install --with-doc --with-src LOST_PACKAGE
-#...
+# ...
+```
 
-#open output pdf file at your own pdf reader
-termux-open test.pdf
-
+6. Open the PDF file by your Android PDF reader
+```bash
+termux-open demo.pdf
 ```
